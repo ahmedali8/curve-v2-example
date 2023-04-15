@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+// Directly modified from https://solidity-by-example.org/defi/stable-swap-amm/
+
 /*
 Invariant - price of trade and amount of liquidity are determined by this equation
 
@@ -30,13 +32,13 @@ library Math {
 
 contract StableSwap {
     // Number of tokens
-    uint256 private constant N = 3;
+    uint256 private constant N = 2;
     // Amplification coefficient multiplied by N^(N - 1)
     // Higher value makes the curve more flat
     // Lower value makes the curve more like constant product AMM
-    uint256 private constant A = 2000 * (N ** (N - 1));
+    uint256 private constant A = 1000 * (N ** (N - 1));
     // 0.03%
-    uint256 private constant SWAP_FEE = 300;
+    uint256 private constant SWAP_FEE = 0;
     // Liquidity fee is derived from 2 constraints
     // 1. Fee is 0 for adding / removing liquidity that results in a balanced pool
     // 2. Swapping in a balanced pool is like adding and then removing liquidity
@@ -47,8 +49,8 @@ contract StableSwap {
 
     address[N] public tokens;
     // Normalize each token to 18 decimals
-    // Example - DAI (18 decimals), USDC (6 decimals), USDT (6 decimals)
-    uint256[N] private multipliers = [1, 1e12, 1e12];
+    // Example - DAI (18 decimals), USDT (6 decimals)
+    uint256[N] private multipliers = [1, 1e12];
     uint256[N] public balances;
 
     // 1 share = 1e18, 18 decimals
